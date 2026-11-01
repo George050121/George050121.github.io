@@ -129,7 +129,7 @@ button { font: inherit; color: inherit; }
    丁彦皓 in its own narrow track beside it (its right edge on the bar's). The photo is sized from the screen: as tall as the
    hero allows (never below the fold), 4:5 at most and square at least; the name, the lede and the hint grow with it.
    --pw photo width, --ph photo height, --vf the size of 丁彦皓, --hgap the gutter between the two sides */
-.hero { position: relative; min-height: max(600px, 100svh); padding: 104px var(--pad-x) 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 3vw, 48px); align-items: center; overflow: hidden; }
+.hero { touch-action: manipulation; position: relative; min-height: max(600px, 100svh); padding: 104px var(--pad-x) 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 3vw, 48px); align-items: center; overflow: hidden; }
 /* from 641 up the hero is one block: the words, then 丁彦皓 hanging from the photo's top edge on its left, then the photo,
    its right edge on the bar's. The words take exactly the name's width (the name is sized so its ink fills the column),
    the photo takes everything else, and the two columns are the same height: the status row starts on the photo's top
@@ -255,8 +255,9 @@ button { font: inherit; color: inherit; }
 .portrait { position: relative; z-index: 1; justify-self: start; width: var(--pw, 100%); }
 .portrait canvas { width: 100%; height: var(--ph, auto); display: block; }
 /* before the script has made the ink print: the photo itself, its colour taken down to the paper's tone (luminosity over paper) */
-#portrait:not(.ready) { background: url(img/overlook.jpg) 45% 56% / cover, var(--paper-2); background-blend-mode: luminosity; }
+#portrait:not(.ready) { background: url(img/overlook.jpg) 45% 56% / cover, var(--paper-2); background: var(--photo, url(img/overlook.jpg)) 45% 56% / cover, var(--paper-2); background-blend-mode: luminosity; }
 @media (pointer: fine) { #portrait { cursor: none; } }
+#portrait, #verse { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 /* keyboard focus traces the torn edge itself (the canvas's own alpha), never a rounded box around it */
 #portrait:focus-visible { outline: none; filter: drop-shadow(1.5px 0 0 var(--live)) drop-shadow(-1.5px 0 0 var(--live)) drop-shadow(0 1.5px 0 var(--live)) drop-shadow(0 -1.5px 0 var(--live)); }
 /* a fixed column height: the name cannot grow or jump while the brush face arrives */
@@ -552,6 +553,8 @@ button { font: inherit; color: inherit; }
 .contact h2.inked .stroke { clip-path: inset(0 0 0 0); }
 :root[data-theme="dark"] .contact h2 .stroke { opacity: .6; }
 .contact .acts { display: flex; gap: 14px; flex-wrap: wrap; margin-top: clamp(52px, 6.5vw, 92px); align-items: center; }
+.ne { display: inline-block; width: .7em; height: .7em; vertical-align: .02em; margin-left: .06em; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.pill .ne { margin-left: -5px; }
 .pill { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--ink); border-radius: 999px; height: max(var(--ctl-h), clamp(40px, 2.5vw, 52px)); padding: 0 clamp(18px, 1.1vw, 24px); font: 500 clamp(14px, calc(.3vw + 10px), 17px)/1 var(--body); text-decoration: none; background: transparent; cursor: pointer; transition: background-color .25s, color .25s; }
 .pill:hover { background: var(--ink); color: var(--paper); }
 .pill.solid { background: var(--ink); color: var(--paper); }
@@ -747,7 +750,7 @@ body.pal-on .cursor, .cursor.on.link, .cursor.on.dip { opacity: 0; }
       <div class="hud mono"><span>UW–Madison CS ’27</span><span>from Hangzhou</span><span><i class="live" aria-hidden="true">●</i>open to SWE roles</span></div>
       <h1 class="name">Yanhao <em>Ding</em></h1>
       <p class="lede">I study computer science and I’m building <a href="https://didao.app/" target="_blank" rel="noopener">Didao</a>, which helps people say more in a language they’re still learning, by learning from what they’re actually trying to say. I grew up in Hangzhou, between the Fuchun River and West Lake. Now I live beside Lake Mendota, and I’m still working out how I feel about it.</p>
-      <div class="reach mono"><a href="mailto:yding275@wisc.edu">yding275@wisc.edu</a><a href="#work">work &amp; school ↓</a><a href="https://www.linkedin.com/in/yanhao-ding-5b54b4399" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://github.com/George050121" target="_blank" rel="noopener">GitHub ↗</a></div>
+      <div class="reach mono"><a href="mailto:yding275@wisc.edu">yding275@wisc.edu</a><a href="#work">work &amp; school ↓</a><a href="https://www.linkedin.com/in/yanhao-ding-5b54b4399" target="_blank" rel="noopener">LinkedIn <svg class="ne" viewBox="0 0 10 10" aria-hidden="true"><path d="M2.2 7.8 7.6 2.4M3.4 2.4h4.2v4.2"/></svg></a><a href="https://github.com/George050121" target="_blank" rel="noopener">GitHub <svg class="ne" viewBox="0 0 10 10" aria-hidden="true"><path d="M2.2 7.8 7.6 2.4M3.4 2.4h4.2v4.2"/></svg></a></div>
       <div class="slot" aria-hidden="true"></div>
     </div>
     <figure class="portrait" style="margin:0">
@@ -874,7 +877,7 @@ body.pal-on .cursor, .cursor.on.link, .cursor.on.dip { opacity: 0; }
   <section class="sec" id="work" aria-label="Work">
     <div class="sec-h"><span class="mono kick">03 — work</span><h2>Work <i>&amp; school</i></h2></div>
     <div class="rows">
-      <div class="job"><span class="mono">2026 — now</span><div><h3>Building Didao</h3><p>Real conversations don’t wait until you’re fluent. Didao lets you use the Chinese, or the English, you already know: its helper DaoDao finds natural wording while you’re texting or talking, explains tone and usage, and turns the expressions you actually needed into practice. It’s built around learning from what you’re trying to say. Waitlist open; iOS and Android coming soon.</p></div><a class="go" href="https://didao.app/" target="_blank" rel="noopener">didao.app ↗</a></div>
+      <div class="job"><span class="mono">2026 — now</span><div><h3>Building Didao</h3><p>Real conversations don’t wait until you’re fluent. Didao lets you use the Chinese, or the English, you already know: its helper DaoDao finds natural wording while you’re texting or talking, explains tone and usage, and turns the expressions you actually needed into practice. It’s built around learning from what you’re trying to say. Waitlist open; iOS and Android coming soon.</p></div><a class="go" href="https://didao.app/" target="_blank" rel="noopener">didao.app <svg class="ne" viewBox="0 0 10 10" aria-hidden="true"><path d="M2.2 7.8 7.6 2.4M3.4 2.4h4.2v4.2"/></svg></a></div>
       <div class="job"><span class="mono">summer 2026</span><div><h3>China UnionPay Data Co., Ltd.</h3><p>Backend development intern on card issuance support systems, in Shanghai. Built and tested backend APIs for account and transaction inquiries used in integration testing across services, tracked down slow SQL on large tables and worked with the DBAs on indexing, and chased bugs through service logs, with scripts to reconcile account and transaction data and API docs for regression testing.</p></div></div>
       <div class="job"><span class="mono">class of ’27</span><div><h3>University of Wisconsin–Madison</h3><p>B.S. Computer Science.</p></div></div>
       <div class="job"><span class="mono">2023 — 2025</span><div><h3>Kean University</h3><p>Computer Science. Also fixed a lot of laptops and taught Java workshops.</p></div></div>
@@ -898,8 +901,8 @@ body.pal-on .cursor, .cursor.on.link, .cursor.on.dip { opacity: 0; }
     <div class="acts">
       <a class="pill solid" href="mailto:yding275@wisc.edu">yding275@wisc.edu</a>
       <button class="pill sm" id="copyEmail" aria-label="Copy my email address">copy</button>
-      <a class="pill" href="https://www.linkedin.com/in/yanhao-ding-5b54b4399" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a class="pill" href="https://github.com/George050121" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="pill" href="https://www.linkedin.com/in/yanhao-ding-5b54b4399" target="_blank" rel="noopener">LinkedIn <svg class="ne" viewBox="0 0 10 10" aria-hidden="true"><path d="M2.2 7.8 7.6 2.4M3.4 2.4h4.2v4.2"/></svg></a>
+      <a class="pill" href="https://github.com/George050121" target="_blank" rel="noopener">GitHub <svg class="ne" viewBox="0 0 10 10" aria-hidden="true"><path d="M2.2 7.8 7.6 2.4M3.4 2.4h4.2v4.2"/></svg></a>
     </div>
     </div>
     <div class="now mono" aria-label="Right now">
@@ -962,7 +965,20 @@ function noise1(R, len, minGap, maxGap) {
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 /* frame-rate independent time step from the rAF timestamp (60Hz and 120Hz screens play the same) */
 function stepper() { let last = 0; return now => { now = now || performance.now(); const d = last ? Math.min(.05, Math.max(0, (now - last) / 1000)) : 1 / 60; last = now; return d; }; }
-function loadImg(k, src) { return new Promise(r => { const i = new Image(); i.onload = () => { IMG[k] = i; r(i); }; i.onerror = () => r(null); i.src = src; }); }
+// a flaky phone connection (or iOS cancelling a load while the app is switched away) must not lose a photo for good:
+// a failed load is tried again a few times, a little later each time, past any cached failure (a fresh query string)
+function loadImg(k, src, tries = 4) {
+  return new Promise(r => {
+    let n = 0;
+    const go = () => {
+      const i = new Image();
+      i.onload = () => { IMG[k] = i; r(i); };
+      i.onerror = () => { if (++n < tries) setTimeout(go, 600 * n * n); else r(null); };
+      i.src = n ? src + (src.includes('?') ? '&' : '?') + 'r=' + n + '.' + Date.now().toString(36) : src;
+    };
+    go();
+  });
+}
 
 /* ---------- toast ---------- */
 let tt;
@@ -1382,8 +1398,8 @@ const rimTip = (() => {
   x.fillStyle = g; x.fillRect(0, 0, S, S); return c;
 })();
 function inkPhoto(canvas, img, crop, opts = {}) {
-  if (!img) return;
-  const ctx = canvas.getContext('2d');
+  if (!img) return null;
+  let ctx = null, ok = false;
   // 1.5x is plenty for a soft ink print, and every frame of the colour fade repaints the whole canvas
   const dpr = Math.min(devicePixelRatio || 1, 2);
   // mask: where the visitor's brush has brought the colour back. dmask: the demonstration stroke, kept apart so it can
@@ -1391,14 +1407,19 @@ function inkPhoto(canvas, img, crop, opts = {}) {
   // mctx is the brush's current target (the main mask, or the demo's while the demo paints)
   let W, H, duo, color, mask, mctx, MC, dmask, DC, tmp, edge, sheetC, active = false, lastPt = null, fresh = [], dirtyM = true, fr = 0;
   const tick = stepper();
-  function build() {
+  // every buffer is made (or, at the same size, reused) off screen first; the visible canvas is resized and painted only
+  // at the end, so a failure part way never leaves a cleared photo behind
+  const cv = (old, w, h) => { if (old && old.width === w && old.height === h) return old; const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  const cx2 = (c, o) => { const x = c.getContext('2d', o); if (!x) throw new Error('no 2d context'); return x; };
+  function make() {
     W = canvas.clientWidth; H = canvas.clientHeight || W * (opts.ratio || 1.25);
-    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    if (!(W > 0 && H > 0)) throw new Error('no box');
+    const CW = Math.round(W * dpr), CH = Math.round(H * dpr);
     const [sx, sy, sw, shh] = crop(img, W / H);
-    color = document.createElement('canvas'); color.width = canvas.width; color.height = canvas.height;
-    color.getContext('2d').drawImage(img, sx, sy, sw, shh, 0, 0, color.width, color.height);
-    duo = document.createElement('canvas'); duo.width = color.width; duo.height = color.height;
-    const d = duo.getContext('2d', { willReadFrequently: true }); d.drawImage(color, 0, 0);
+    color = cv(color, CW, CH);
+    { const q = cx2(color); q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, CW, CH); q.drawImage(img, sx, sy, sw, shh, 0, 0, CW, CH); }
+    duo = cv(duo, CW, CH);
+    const d = cx2(duo, { willReadFrequently: true }); d.clearRect(0, 0, CW, CH); d.drawImage(color, 0, 0);
     const id = d.getImageData(0, 0, duo.width, duo.height), px = id.data;
     const dark = isDark();
     const P = dark ? [19, 18, 16] : [242, 237, 227], I = dark ? [236, 230, 218] : [22, 19, 15];
@@ -1410,17 +1431,39 @@ function inkPhoto(canvas, img, crop, opts = {}) {
     }
     d.putImageData(id, 0, 0);
     if (!mask || mask.width !== color.width || mask.height !== color.height) {
-      mask = document.createElement('canvas'); mask.width = color.width; mask.height = color.height; mctx = MC = mask.getContext('2d');
-      dmask = document.createElement('canvas'); dmask.width = color.width; dmask.height = color.height; DC = dmask.getContext('2d');
-      tmp = document.createElement('canvas'); tmp.width = color.width; tmp.height = color.height;
+      mask = document.createElement('canvas'); mask.width = color.width; mask.height = color.height; mctx = MC = cx2(mask);
+      dmask = document.createElement('canvas'); dmask.width = color.width; dmask.height = color.height; DC = cx2(dmask);
+      tmp = document.createElement('canvas'); tmp.width = color.width; tmp.height = color.height; cx2(tmp);
       edge = deckle(color.width, color.height, opts.seed, dpr);
     }
     // the sheet the picture is printed on, in the paper's own lighter core (by night a faint pale margin)
-    sheetC = document.createElement('canvas'); sheetC.width = color.width; sheetC.height = color.height;
-    { const q = sheetC.getContext('2d'); q.fillStyle = dark ? 'rgba(255,248,235,.1)' : '#fcfaf5'; q.fillRect(0, 0, sheetC.width, sheetC.height); q.globalCompositeOperation = 'destination-in'; q.drawImage(edge.sheet, 0, 0); }
-    paint();
+    sheetC = cv(sheetC, CW, CH);
+    { const q = cx2(sheetC); q.globalCompositeOperation = 'source-over'; q.clearRect(0, 0, CW, CH); q.fillStyle = dark ? 'rgba(255,248,235,.1)' : '#fcfaf5'; q.fillRect(0, 0, sheetC.width, sheetC.height); q.globalCompositeOperation = 'destination-in'; q.drawImage(edge.sheet, 0, 0); }
+    if (canvas.width !== CW) canvas.width = CW;
+    if (canvas.height !== CH) canvas.height = CH;
+    ctx = canvas.getContext('2d'); if (!ctx) throw new Error('no 2d context');
+    ok = true; paint();
+  }
+  // the photo must always be there: if the print cannot be made (no 2D context under memory pressure, no layout box
+  // yet, an API the browser lacks) or did not reach the screen (the centre of the sheet is never transparent), the
+  // canvas drops .ready and the plain photo behind it (#portrait:not(.ready)) shows instead
+  // the centre of the visible canvas, read through a 1px probe (never a readback of the photo's own, GPU-held canvas)
+  let probe = null;
+  function shows() {
+    if (!probe) { probe = document.createElement('canvas'); probe.width = probe.height = 1; }
+    const q = cx2(probe, { willReadFrequently: true }); q.clearRect(0, 0, 1, 1);
+    q.drawImage(canvas, canvas.width >> 1, canvas.height >> 1, 1, 1, 0, 0, 1, 1);
+    return q.getImageData(0, 0, 1, 1).data[3] > 0;
+  }
+  function build(anew) {
+    if (anew) mask = null;      // after the page comes back: every buffer is made again (iOS may have dropped them)
+    try { make(); ok = shows(); }
+    catch (e) { ok = false; }
+    canvas.classList.toggle('ready', ok);
+    return ok;
   }
   function paint() {
+    if (!ok) return;
     ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(duo, 0, 0);
@@ -1462,6 +1505,7 @@ function inkPhoto(canvas, img, crop, opts = {}) {
   let heldAt = 0, teaseLater = false;
   const held = () => !!(opts.hold && opts.hold());
   function loop(now) {
+    if (!ok) { active = false; return; }
     if (held()) { active = false; heldAt = performance.now(); return; }
     const dt = tick(now); fade(dt, performance.now());
     if (!done()) requestAnimationFrame(loop); else { active = false; fresh = []; }
@@ -1471,6 +1515,7 @@ function inkPhoto(canvas, img, crop, opts = {}) {
     if (teaseLater) { teaseLater = false; tease(); }
   }
   function slow() {
+    if (!ok) { active = false; return; }
     fade(.125, performance.now());
     if (!done()) setTimeout(slow, 125); else active = false;
   }
@@ -1507,6 +1552,7 @@ function inkPhoto(canvas, img, crop, opts = {}) {
   // pressure: a fast drag thins the stroke, a slow one lets it swell; the change is smoothed so the width flows
   let pr = 1;
   function brush(x, y, r, a) {
+    if (!ok) return;
     a = a || .6;
     if (lastPt && Math.hypot(x - lastPt[0], y - lastPt[1]) < r * 3) {
       const dx = x - lastPt[0], dy = y - lastPt[1], dist = Math.hypot(dx, dy), ang = Math.atan2(dy, dx);
@@ -1519,6 +1565,7 @@ function inkPhoto(canvas, img, crop, opts = {}) {
   // the demonstration stroke: a diagonal with a pressure curve (thin, full, thin), jitter, and flying-white gaps near the end
   let teasing = false;
   function tease() {
+    if (!ok) return;
     if (held()) { teaseLater = true; return; }
     if (teasing) return; teasing = true;
     // a pale tint, not a finished patch of colour: the visitor's own strokes are the full-strength version.
@@ -1570,8 +1617,19 @@ function inkPhoto(canvas, img, crop, opts = {}) {
   // keyboard: the photo is focusable; Enter or Space brushes a stroke of color in
   canvas.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tease(); } });
   build();
-  let rt, lw = innerWidth; addEventListener('resize', () => { if (innerWidth === lw) return; lw = innerWidth; clearTimeout(rt); rt = setTimeout(build, 200); });
-  return { rebuild: build, tease, resume };
+  let rt, lw = innerWidth; addEventListener('resize', () => { if (innerWidth === lw) return; lw = innerWidth; clearTimeout(rt); rt = setTimeout(() => build(), 200); });
+  // iOS can drop a canvas's pixels while the page is away (an app switch, the back/forward cache, memory pressure), and
+  // nothing else repaints the print: when the page comes back it is checked, and made again from the photo if needed
+  let hidAt = 0;
+  const heal = long => {
+    if (document.hidden) return;
+    let bad = !ok;
+    if (!bad) try { bad = !shows(); } catch (e) { bad = true; }
+    if (bad || long) build(true);
+  };
+  document.addEventListener('visibilitychange', () => { if (document.hidden) hidAt = performance.now(); else heal(hidAt && performance.now() - hidAt > 10000); });
+  addEventListener('pageshow', e => { if (e.persisted) heal(true); });
+  return { rebuild: () => build(), tease, resume, ok: () => ok };
 }
 const cropAt = (fx, fy) => (img, ar) => {
   let sw = img.width, sh = img.width / ar;
@@ -1715,9 +1773,15 @@ const POEMS = [
   /* ---------- layout: the biggest two columns that fit on the paper the photo (and, stacked, the words) leave ---------- */
   // laid out on the hero's first screen, wherever the page is scrolled (a click lower down scrolls the hero back into view);
   // of the places that fit, the one nearest the click, so the brush starts close to where the drop fell
-  function solve(n, p, cx) {
+  // laid out for the small viewport (the phone's toolbars shown), so the couplet's foot is never under them once the
+  // page glides back up and Safari's bar comes back (on a desktop this is just the window's height)
+  const svhEl = document.createElement('div');
+  svhEl.style.cssText = 'position:fixed;left:0;top:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(svhEl);
+  const viewH = () => Math.min(innerHeight, svhEl.offsetHeight || innerHeight);
+  function solve(n, p, cx, minS) {
     const hr = hero.getBoundingClientRect(), ht = Math.max(0, hr.top), wide = !stacked();
-    let top = Math.max(8, bar.getBoundingClientRect().bottom + 18 - ht), bot = Math.min(H - 8, innerHeight - ht - (innerWidth > 560 ? 92 : 76));
+    let top = Math.max(8, bar.getBoundingClientRect().bottom + 18 - ht), bot = Math.min(H - 8, viewH() - ht - (innerWidth > 560 ? 92 : 76));
     // wide: the couplet takes over exactly the box the photo leaves (its top edge to its caption's foot), so the brush
     // writes where the photo was, never up against the bar
     if (wide) { const pb = rel($('#portrait')), cb = rel($('#figCap')); top = Math.max(top, pb.t + 4); bot = Math.min(H - 8, Math.max(bot, cb.b), cb.b); }
@@ -1729,7 +1793,7 @@ const POEMS = [
     meas.querySelector('.en').textContent = `“${p.en}”`; meas.querySelector('.by').textContent = '— ' + p.by; meas.querySelector('.more').textContent = cue(k);
     const hc = {}, capH = w => { w = Math.round(w); if (!hc[w]) { meas.style.width = w + 'px'; hc[w] = meas.offsetHeight; } return hc[w]; };
     const pr = rel($('#portrait')), SIDE = 200, CAPW = wide ? Math.round(Math.min(560, Math.max(400, innerWidth * .24))) : 430;
-    for (let s = wide ? Math.min(168, Math.floor((bot - top) / (n + .35))) : (W <= 560 ? 100 : 124); s >= 30; s -= 2) {
+    for (let s = wide ? Math.min(168, Math.floor((bot - top) / (n + .35))) : (W <= 560 ? 100 : 124); s >= (minS || 30); s -= 2) {
       const pitch = Math.round(s * 1.16), hgt = n * s, m = s * .62;
       const cl0 = x0 => x0 - pitch - m, cr0 = x0 => x0 + m;   // the columns' ink, left and right
       const xMax = right - m, xMin = left + pitch + m; if (xMax < xMin) continue;
@@ -1760,8 +1824,8 @@ const POEMS = [
     }
     return null;
   }
-  function layout(p, cx) {
-    const n = Math.max(...p.zh.map(l => l.length)), g = solve(n, p, cx);
+  function layout(p, cx, minS) {
+    const n = Math.max(...p.zh.map(l => l.length)), g = solve(n, p, cx, minS);
     if (!g) return null;
     const s = g.s, cells = [];
     p.zh.forEach((line, li) => [...line].forEach((ch, ci) => cells.push({ ch, col: li, row: ci, cx: g.x0 - li * g.pitch, cy: g.y0 + ci * s + s / 2 })));
@@ -2201,7 +2265,23 @@ const POEMS = [
   function clearPrev() { if (prevBox) { const b = prevBox; ctx.clearRect(Math.max(0, b.l - 2), Math.max(0, b.t - 2), b.r - b.l + 4, b.b - b.t + 4); prevBox = null; } }
 
   const prof = []; let pre = null;
+  // whatever goes wrong in a frame, the page is never left with the photo stepped back and no couplet: the loop stops
+  // cleanly, the paper is cleared and everything comes back (and the next tap starts afresh)
   function frame(now) {
+    try { frame1(now); }
+    catch (e) { running = false; abandon(); }
+  }
+  function abandon() {
+    olds = []; splats = []; cur = null; capOff(true);
+    if (leaving) { clearTimeout(leaving); leaving = 0; }
+    if (stage) { clearTimeout(stage.timer); stage = null; }
+    hero.classList.remove('staged', 'all');
+    try { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); } catch (e) {}
+    FR = null; prevBox = null; try { reframe(); } catch (e) {}
+    try { showHint(); } catch (e) {}
+    const ph = window.__photos && window.__photos[0]; ph && ph.resume && ph.resume();
+  }
+  function frame1(now) {
     const pt = performance.now(); clearPrev();
     wetK = isDark() ? .35 : 1;   // light ink on dark paper: a wet stroke must not shine
     const B = { l: 1e9, t: 1e9, r: -1e9, b: -1e9 };
@@ -2307,6 +2387,8 @@ const POEMS = [
   // scroll that brought the hero back into view for it)
   addEventListener('scroll', () => {
     if (!stage || performance.now() < stage.lock) return;
+    // (a slow glide back up, as WebKit's can be, is never the visitor scrolling away: it is waited for a while longer)
+    if (stage.glide) { if (Math.abs(scrollY - stage.y) > 4 && performance.now() < stage.lock + 1500) return; stage.glide = false; }
     const busy = cur && !cur.rest, d = Math.abs(scrollY - stage.y);
     if (d > (busy ? innerHeight * .6 : 60)) leaveStage(true);
   }, { passive: true });
@@ -2330,12 +2412,23 @@ const POEMS = [
     if (now - lastAdv < 650) return true;   // one new couplet per 650ms at most, however fast the clicks come
     // clicked lower down the hero: it is laid out on the hero's first screen, and the page glides back up to it
     const hr = hero.getBoundingClientRect(), up = hr.top < -8;
-    const p = POEMS[idx];
-    const L = layout(p, x); if (!L) return false;
+    // the next couplet in turn; if it cannot fit this paper (a phone on its side), the next one that can, else a smaller hand
+    let p = POEMS[idx], L = layout(p, x);
+    for (let k = 1; !L && k < NP; k++) { const q = POEMS[(idx + k) % NP], L2 = layout(q, x); if (L2) { p = q; L = L2; idx = (idx + k) % NP; } }
+    if (!L && coarseMQ.matches) L = layout(p, x, 20);
+    if (!L) return false;
     lastAdv = now; idx = (idx + 1) % NP; nShown++;
     // (pressed on the hint itself: its dot swells and its words dip for a moment first)
     if (hint.classList.contains('tap')) setTimeout(() => hint.classList.add('off'), 200); else hint.classList.add('off');
-    enterStage(); if (up) { stage.lock = now + (reduce ? 50 : 900); scrollTo({ top: scrollY + hr.top, behavior: reduce ? 'instant' : 'smooth' }); }
+    try { return writeAt(p, L, x, y, now, hr, up); }
+    catch (e) { abandon(); return true; }
+  }
+  function writeAt(p, L, x, y, now, hr, up) {
+    enterStage();
+    // the page glides back up to the hero: the stage's place is where the glide ends, not where the tap was
+    if (up) { stage.y = Math.max(0, scrollY + hr.top); stage.glide = !reduce; stage.lock = now + (reduce ? 50 : 900); scrollTo({ top: scrollY + hr.top, behavior: reduce ? 'instant' : 'smooth' }); }
+    // a stage never outlives a couplet that never began
+    const st = stage; setTimeout(() => { if (stage === st && !cur && !leaving) abandon(); }, 1500);
     capOff(true);
     const hit = preP && preP.key === p.zh.join() + '|' + L.s + '|' + D + '|' + isDark() && preP.L.g.x0 === L.g.x0 && preP.L.g.y0 === L.g.y0;
     const P = hit ? preP : build(L); preP = null; pre = [hit ? 'hit' : 'miss', hit ? P.chars.filter(c2 => c2.built).length : 0, P.chars.length];
@@ -2361,10 +2454,21 @@ const POEMS = [
   }
 
   // a resize folds the couplet away (it was laid out for the old shape of the page)
-  let rzT;
+  // Only a real change of shape counts. A phone's toolbars sliding in or out (on a tap, a scroll, the glide back up; an
+  // in-app browser's bars) change only the window's height: on a touch screen that never folds the couplet, the paper is
+  // just measured again around it. With a mouse a height change folds it only if the hero itself changed
+  let rzT, rzW = innerWidth;
   addEventListener('resize', () => {
     clearTimeout(rzT);
     rzT = setTimeout(() => {
+      if (innerWidth === rzW) {
+        const same = hero.clientWidth === W && hero.clientHeight === H;
+        if (same || coarseMQ.matches) {
+          if (!same) { size(); reframe(); if (!running) redraw(); placeHint(); }
+          return;
+        }
+      }
+      rzW = innerWidth;
       const wasW = W; size();
       olds = []; splats = [];
       if (leaving) { clearTimeout(leaving); leaving = 0; hero.classList.remove('staged', 'all'); }
@@ -2404,16 +2508,36 @@ const POEMS = [
   });
   hero.addEventListener('click', e => {
     if (guarded(e)) return;
+    // (a finger's tap was already answered on its lift, below: the click the browser may send after it is the same tap)
+    if (tapAt && performance.now() - tapAt < 800 && Math.hypot(e.clientX - tapXY[0], e.clientY - tapXY[1]) < 40) return;
     if (e.isTrusted && getSelection && !getSelection().isCollapsed) {
       const moved = down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5;
       if (moved || e.detail > 1) return;
       getSelection().removeAllRanges();
     }
-    if (!stage && e.target.closest('#portrait')) return;   // a press on the photo is for colour, never for a couplet
+    if (!stage && e.target.closest('#portrait')) return;   // a click on the photo is for colour, never for a couplet
+    const [x, y] = local(e); if (!burst(x, y)) spillAt(x, y, null);
+  });
+  // a finger: answered when it lifts, not on the click, which iOS sends only for some elements and swallows after a slow
+  // or a selecting press. A tap is a press that hardly moved (a scroll or a pinch is not: the browser cancels it). On a
+  // phone a tap on the photo blooms its colour (the photo's own press) and writes a couplet too: "tap anywhere" means it
+  // (a touch that lands while the page is still moving, a fling's coast, is the finger stopping the page: iOS sends no
+  // click for it, and it is left to the click here too)
+  let tapAt = 0, tapXY = [0, 0], tdown = null, movedAt = -1e9;
+  addEventListener('scroll', () => { movedAt = performance.now(); }, { passive: true });
+  hero.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && e.isPrimary && performance.now() - movedAt > 120) tdown = { x: e.clientX, y: e.clientY, t: performance.now(), sel: !!(getSelection && !getSelection().isCollapsed) }; else tdown = null; });
+  hero.addEventListener('pointercancel', () => { tdown = null; });
+  hero.addEventListener('pointerup', e => {
+    const d = tdown; tdown = null;
+    if (!d || e.pointerType !== 'touch' || !e.isPrimary || guarded(e)) return;
+    if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10) return;
+    // a long press that selected words is for copying them
+    if (getSelection && !getSelection().isCollapsed) { if (!d.sel && performance.now() - d.t > 450) return; getSelection().removeAllRanges(); }
+    tapAt = performance.now(); tapXY = [e.clientX, e.clientY];
     const [x, y] = local(e); if (!burst(x, y)) spillAt(x, y, null);
   });
   // the hint answers a press too (its dot takes the ink, its words dip), and the couplet comes
-  hint.addEventListener('click', e => { e.stopPropagation(); hint.classList.add('tap'); const r = rel(hint); burst(r.l + 4, r.b + 18); });
+  hint.addEventListener('click', e => { e.stopPropagation(); hint.classList.add('tap'); const r = rel(hint); if (!burst(r.l + 4, r.b + 18)) { hint.classList.remove('tap'); spillAt(r.l + 4, r.b + 18, null); } });
 
   // a good spot of open paper to click (the ⌘K "poem" command clicks here), in client coordinates; never the hint itself
   window.__verseSpot = () => {
@@ -4157,17 +4281,30 @@ function inkDrop(ctx, x, y, r, rgb, bleed, seed) {
 /* =========================================================
    JOURNEY + LOVES photos in ink
    ========================================================= */
-Promise.all([loadImg('overlook', 'img/overlook.jpg')]).then(() => {
-  const photos = [
+// The plain photo (#portrait:not(.ready)) stands until the ink print is really on screen: inkPhoto sets .ready itself,
+// only after a print that reached the canvas (painted synchronously: no frame shows neither). If the photo could not be
+// fetched at all (after loadImg's retries), it is fetched again when the network or the page comes back
+let lakeOnce = false;
+function startPortrait() {
+  return loadImg('overlook', 'img/overlook.jpg').then(img => {
+    const pc = $('#portrait');
+    // the plain photo behind the print uses the very file that arrived (a retry has its own address)
+    if (img) pc.style.setProperty('--photo', `url("${img.src}")`);
+    let ph = null;
     // the first stroke runs across the water and the far shore, well below the sky behind my head
     // the demo stroke crosses the autumn woods and the rock below me: warm, low-chroma colour, never the open water
-    inkPhoto($('#portrait'), IMG.overlook, cropAt(.45, .56), { ratio: 1.25, r: 70, edge: .06, delay: 2500, wakeOn: $('#hero'), seed: 3, arc: -.03, tease: [[.47, .7], [.97, .5]], hold: () => $('#hero').classList.contains('staged') })
-
-  ];
-  $('#portrait').classList.add('ready');   // (the ink print was painted synchronously above: no frame shows neither)
-  window.__photos = photos.concat(lakeW);
-  lakeW.rebuild();
-});
+    try { ph = inkPhoto(pc, img, cropAt(.45, .56), { ratio: 1.25, r: 70, edge: .06, delay: 2500, wakeOn: $('#hero'), seed: 3, arc: -.03, tease: [[.47, .7], [.97, .5]], hold: () => $('#hero').classList.contains('staged') }); }
+    catch (e) { ph = null; pc.classList.remove('ready'); }
+    window.__photos = [ph].concat(lakeW);
+    if (!lakeOnce) { lakeOnce = true; lakeW.rebuild(); }
+    if (!img) {
+      const again = () => { if (document.hidden || again.on) return; again.on = true; off(); startPortrait(); };
+      const off = () => { removeEventListener('online', again); document.removeEventListener('visibilitychange', again); removeEventListener('pageshow', again); };
+      addEventListener('online', again); document.addEventListener('visibilitychange', again); addEventListener('pageshow', again);
+    }
+  });
+}
+startPortrait();
 // equal heights in the 1.3fr / 1fr pair, so the two captions share a baseline
 
 
@@ -4296,8 +4433,8 @@ let palOpen;
     { k: 'work', d: 'work & school', run: go('#work') },
     { k: 'contact', d: 'say hi', run: go('#contact') },
     { k: 'email', d: 'copy my email', run: copy },
-    { k: 'linkedin', d: 'open LinkedIn ↗', href: LI },
-    { k: 'github', d: 'open GitHub ↗', href: 'https://github.com/George050121' },
+    { k: 'linkedin', d: 'open LinkedIn ↗\uFE0E', href: LI },
+    { k: 'github', d: 'open GitHub ↗\uFE0E', href: 'https://github.com/George050121' },
     { k: 'dodgers', d: 'Ohtani takes an at-bat', run: () => { go('#loves')(); setTimeout(() => window.__field && window.__field.focus(), reduce ? 0 : 600); } },
     { k: 'play', d: 'spin First Love', run: () => { go('#loves')(); window.__music && window.__music(); } },
     { k: 'night', d: 'grind the ink (dark mode)', run: () => window.__theme(true) },
@@ -4416,7 +4553,7 @@ let palOpen;
     const stone = $('#stone'); stone.style.right = innerWidth <= 1099 ? Math.round(innerWidth - kbtn.getBoundingClientRect().left + 8) + 'px' : '';
     $('#footHint').textContent = coarse || innerWidth < 700 ? `tap Menu for everything · hold the inkstone for ${when}` : `press ${key} for everything · grind the inkstone for ${when}`;
     // the photo's own caption says how to color it; where the copy is stacked (no hint line under it) it also points at the paper
-    $('#figCap').textContent = 'location: Devil’s Lake, WI · ' + (coarse ? 'tap to color' : 'brush to color');
+    $('#figCap').textContent = 'location: Devil’s Lake, WI' + (coarse ? '' : ' · brush to color');
     window.__verseHint && window.__verseHint();
   }
 
