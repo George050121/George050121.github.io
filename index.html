@@ -468,6 +468,12 @@ button { font: inherit; color: inherit; }
 .facts dd:last-child { margin-right: 0; }
 .facts dd i { font: italic 400 clamp(21px, calc(.4vw + 15px), 27px)/1.2 var(--display); }
 #musicNote, .ball header .cue { white-space: nowrap; }
+/* the sound comes from Spotify's own player. It sits unseen (but rendered, so it may play) until the browser wants a
+   press inside it (iOS, strict autoplay settings): then it shows, small, under the facts */
+.sp-slot { position: absolute; width: 300px; height: 80px; left: 0; bottom: 0; opacity: 0; pointer-events: none; overflow: hidden; z-index: -1; }
+.sp-slot.show { position: relative; z-index: auto; opacity: 1; pointer-events: auto; width: min(100%, 420px); height: 80px; margin-top: 14px; border-radius: 12px; transition: opacity .5s; }
+.sp-slot iframe { display: block; width: 100%; height: 80px; border: 0; border-radius: 12px; }
+.music .notes { position: relative; }
 /* tablets and the side panel: one card under the other; the record's card is a row: the photo on the left, and on its
    right the title on the photo's top line and the facts down to its foot */
 @media (max-width: 1099px) {
@@ -852,13 +858,14 @@ body.pal-on .cursor, .cursor.on.link, .cursor.on.dip { opacity: 0; }
         <div class="snowbg" aria-hidden="true"></div>
         <canvas id="snowC" aria-hidden="true"></canvas>
         <div class="deck">
-          <button class="vinyl" id="vinyl" aria-label="Spin the record (no sound)" aria-pressed="false"><canvas id="vinylC" aria-hidden="true"></canvas></button>
+          <button class="vinyl" id="vinyl" aria-label="Play First Love" aria-pressed="false"><canvas id="vinylC" aria-hidden="true"></canvas></button>
           <svg class="arm" id="arm" viewBox="0 0 100 150" aria-hidden="true"><circle cx="85" cy="12" r="9" fill="var(--paper)" stroke="currentColor" stroke-width="2"/><path d="M85 12 L70 120 L58 136" stroke="var(--paper)" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M85 12 L70 120 L58 136" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="50" y="130" width="14" height="10" rx="2" fill="#e9e2d4" stroke="currentColor" stroke-width="1.6" transform="rotate(30 57 135)"/></svg>
         </div>
         </div>
         <div class="notes">
           <dl class="facts"><dt>favorite song</dt><dd><i>First Love</i></dd><dt>favorite artist</dt><dd>Lana Del Rey</dd></dl>
           <p>The rest of my taste is all over the place, on purpose.</p>
+          <div class="sp-slot" id="spSlot"><div id="spEmbed"></div></div>
         </div>
       </div>
     </div>
@@ -4034,10 +4041,59 @@ function inkDrop(ctx, x, y, r, rgb, bleed, seed) {
   function toggle() {
     on = !on; arm.classList.toggle('on', on); eq.classList.toggle('on', on);
     v.setAttribute('aria-pressed', on); if (on) window.__found('record');
-    note.textContent = on ? 'spinning silently' : (coarseMQ.matches ? 'tap' : 'click') + ' the record';
+    note.textContent = on ? 'now playing' : (coarseMQ.matches ? 'tap' : 'click') + ' the record';
+    sound(on);
     if (reduce) { ang = (ang + 30) % 360; v.style.transform = `rotate(${ang}deg)`; return; }   // one still step, no motion
     if (on) spinAt = performance.now() + 600;
     spinWake();
+  }
+  /* the sound: First Love on Spotify, through Spotify's iFrame API. Nothing loads until the first press. If the API
+     cannot load (an offline copy, a strict host), the record still spins and the note says so. If the browser will not
+     let the hidden player start, it shows itself under the facts so one press inside it starts the song */
+  const SP = 'spotify:track:39HrUxcvKF3jtLz7fUDWXc', slot = $('#spSlot');
+  let ctl = null, spState = 0, playing = false, want = false, guard = 0, fresh = true;
+  function spLoad() {
+    spState = 1;
+    window.onSpotifyIframeApiReady = API => {
+      API.createController($('#spEmbed'), { uri: SP, width: '100%', height: 80 }, c => {
+        ctl = c; spState = 2;
+        c.addListener('ready', () => { if (want) spPlay(); });
+        c.addListener('playback_update', e => {
+          const d = e.data || {}, user = slot.classList.contains('show');
+          if (!d.isPaused && !playing) {
+            playing = true; clearTimeout(guard);
+            // started from the visible player: the record follows the sound; a stop that beat the sound wins otherwise
+            if (!on) { if (user) toggle(); else { try { ctl.pause(); } catch (x) {} } }
+            if (on) note.textContent = 'now playing';
+          } else if (d.isPaused && playing) {
+            playing = false;
+            // the song ran out (or Spotify's 30-second preview, for visitors not signed in), or the visitor paused the
+            // player itself: the record comes to rest
+            const ended = d.duration && d.position >= d.duration - 1500;
+            if (ended) fresh = true;
+            if (on && (ended || user)) { toggle(); if (ended) note.textContent = 'play it again'; }
+          }
+        });
+      });
+    };
+    const sc = document.createElement('script'); sc.src = 'https://open.spotify.com/embed/iframe-api/v1'; sc.async = true;
+    sc.onerror = () => { spState = -1; if (on) note.textContent = 'spinning silently'; };
+    document.head.appendChild(sc);
+  }
+  function spPlay() {
+    if (!ctl) return;
+    if (playing) return;
+    // the first press (and after the song ends) starts from the top; later presses pick up where it was lifted
+    try { if (fresh) ctl.play(); else ctl.resume(); fresh = false; } catch (e) {}
+    clearTimeout(guard);
+    // no sound within a few seconds: the browser wants a press inside the player itself
+    guard = setTimeout(() => { if (on && !playing) { slot.classList.add('show'); note.textContent = 'press play below'; } }, 3500);
+  }
+  function sound(o) {
+    want = o;
+    if (o && !playing && spState !== -1) note.textContent = 'cueing up…';
+    if (o) { if (spState === 0) spLoad(); else if (spState === 2) spPlay(); else if (spState === -1) note.textContent = 'spinning silently'; }
+    else { clearTimeout(guard); if (ctl && playing) { try { ctl.pause(); } catch (e) {} } }
   }
   v.addEventListener('click', toggle);
   window.__music = () => { if (!on) toggle(); };   // the menu only ever starts it
