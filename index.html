@@ -1935,10 +1935,29 @@ const POEMS = [
     k.setTransform(1, 0, 0, 1, 0, 0); k.globalCompositeOperation = 'source-over'; k.globalAlpha = 1; k.shadowBlur = 0; k.shadowOffsetX = 0; k.shadowColor = 'transparent';
     k.clearRect(0, 0, n, n); return k;
   }
-  // a shape's alpha, blurred (a shadow cast from far off the canvas: works everywhere ctx.filter does not)
+  // a shape's alpha, blurred: three box passes each way in script (≈ a Gaussian of σ = r/2, what shadowBlur r gives).
+  // (It used to be a shadow cast from a copy drawn wholly off the canvas; WebKit skips drawing such a copy, shadow and
+  // all, so on iPhones every edge came out empty and the brush wrote nothing)
   function blurA(k, src, n, r) {
-    const off = n + 64; k.shadowColor = '#000'; k.shadowBlur = r; k.shadowOffsetX = off; k.drawImage(src, 0, 0, n, n, -off, 0, n, n);
-    k.shadowBlur = 0; k.shadowOffsetX = 0; k.shadowColor = 'transparent';
+    const sd = src.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, n, n).data, N = n * n;
+    let a = new Float32Array(N), b = new Float32Array(N);
+    for (let i = 0; i < N; i++) a[i] = sd[(i << 2) + 3];
+    const sg = r / 2, h = Math.max(1, Math.round((Math.sqrt(4 * sg * sg + 1) - 1) / 2)), w = 2 * h + 1;
+    const pass = (A, B, horiz) => {
+      for (let L = 0; L < n; L++) {
+        let acc = 0; const at = i => horiz ? L * n + i : i * n + L;
+        for (let i = 0; i < h && i < n; i++) acc += A[at(i)];
+        for (let i = 0; i < n; i++) {
+          if (i + h < n) acc += A[at(i + h)];
+          if (i - h - 1 >= 0) acc -= A[at(i - h - 1)];
+          B[at(i)] = acc / w;
+        }
+      }
+    };
+    for (let q = 0; q < 3; q++) { pass(a, b, true); pass(b, a, false); }
+    const out = new ImageData(n, n), O = out.data;
+    for (let i = 0; i < N; i++) O[(i << 2) + 3] = a[i];
+    k.putImageData(out, 0, 0);
   }
   function hairs(k, U, st, dry, lw, uPx) {
     U(k); k.lineCap = 'round'; k.lineJoin = 'round'; k.strokeStyle = '#000';
